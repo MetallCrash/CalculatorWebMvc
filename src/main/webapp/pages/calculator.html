@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+</head>
+<body>
+<div>
+    <a th:if="${session.user == null}" href="/user/reg">Registration</a>
+    <a th:if="${session.user == null}" href="/user/sign-in">Sign in</a>
+    <a th:if="${session.user != null}" href="/calc">Calculator</a>
+    <a th:if="${session.user != null}" href="/user/sign-out">Sign out</a>
+</div>
+<form th:action="@{/calc}" method="post" th:object="${newOperation}">
+    <input th:field="*{num1}" placeholder="Number 1">
+    <p th:if="${#fields.hasErrors('num1')}" th:errors="*{num1}"></p>
+    <input th:field="*{action}" placeholder="Action">
+    <p th:if="${#fields.hasErrors('action')}" th:errors="*{action}"></p>
+    <input th:field="*{num2}" placeholder="Number 2">
+    <p th:if="${#fields.hasErrors('num2')}" th:errors="*{num2}"></p>
+    <button>Calculate</button>
+</form>
+<p th:if="${result != null}" th:text="${result}"></p>
+<p th:if="${#session.getAttribute('user') != null}" th:each="operation : ${operationList}"
+   th:text="${operation.getNum1()}+${operation.getAction()}+${operation.getNum2()}+'='+${operation.getResult()}"></p>
+</body>
+</html>

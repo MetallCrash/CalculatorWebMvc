@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -23,24 +23,47 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String homePage() {
-        return "home";
-    }
-
-    @GetMapping("/user/reg")
+    @GetMapping("/reg")
     public String registrationPage(Model model) {
         model.addAttribute("newUser", new User());
         return "/registration";
     }
 
-    @PostMapping("/user/reg")
-    public String createPost(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult, Model model, HttpSession session) {
+    @PostMapping("/reg")
+    public String registrationPage(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/registration";
+        } else {
+            userService.registerUser(user);
+            return "redirect:/user/sign-in";
         }
-        userService.registerUser(user);
-        session.setAttribute("user", user);
-        return "redirect:/calc";
+    }
+
+    @GetMapping("/sign-in")
+    public String signInPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return "/sign-in";
+    }
+
+    @PostMapping("/sign-in")
+    public String signInPage(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult, HttpSession session, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "/sign-in";
+        } else {
+            if (userService.checkUser(user)) {
+                session.removeAttribute("signInMessage");
+                session.setAttribute("user", user);
+                return "redirect:/";
+            } else {
+                model.addAttribute("message", "Wrong login or password.");
+                return "/sign-in";
+            }
+        }
+    }
+
+    @GetMapping("/sign-out")
+    public String signOut(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 }

@@ -18,4 +18,8 @@ public class UserService {
             userDAO.addUser(user);
         }
     }
+
+    public boolean checkUser(User user) {
+        return userDAO.checkUser(user);
+    }
 }

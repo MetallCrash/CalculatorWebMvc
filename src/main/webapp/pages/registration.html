@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <a th:if="${session.user == null}" href="/user/reg">Registration</a>
+    <a th:if="${session.user == null}" href="/user/sign-in">Sign in</a>
+    <a th:if="${session.user != null}" href="/calc">Calculator</a>
+    <a th:if="${session.user != null}" href="/user/sign-out">Sign out</a>
+</div>
+<form th:action="@{/user/reg}" th:object="${newUser}" method="post">
+    <div>
+        <input type="text" th:field="*{login}" placeholder="Login">
+        <p th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></p>
+    </div>
+    <div>
+        <input type="password" th:field="*{password}" placeholder="Password">
+        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+    </div>
+    <div>
+        <button>Submit</button>
+    </div>
+</form>
+</body>
+</html>

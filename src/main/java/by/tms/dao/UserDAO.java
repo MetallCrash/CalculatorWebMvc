@@ -22,4 +22,13 @@ public class UserDAO {
         }
         return false;
     }
+
+    public boolean checkUser(User user) {
+        for (User optUser : userList) {
+            if (optUser.getLogin().equals(user.getLogin()) && optUser.getPassword().equals(user.getPassword())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

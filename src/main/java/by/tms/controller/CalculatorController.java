@@ -27,7 +27,7 @@ public class CalculatorController {
     @GetMapping()
     public String calculate(Model model) {
         model.addAttribute("newOperation", new Operation());
-        return "calculator";
+        return "/calculator";
     }
 
     @PostMapping()
@@ -43,6 +43,6 @@ public class CalculatorController {
                 model.addAttribute("operationList", calculatorService.showOperationList(user));
             }
         }
-        return "calculator";
+        return "/calculator";
     }
 }
