@@ -1,29 +1,31 @@
 package by.tms.entity;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+@Entity
 public class Operation {
 
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private long id;
     private double num1;
 
     @NotEmpty
     @NotBlank
     @Pattern(regexp = "^[\\+,\\-,\\*,\\/]", message = "Next action only can be +,-,*,/.")
     private String action;
-
     private double num2;
     private double result;
 
-    public Operation() {
+    public long getId() {
+        return id;
     }
 
-    public Operation(double num1, String action, double num2, double result) {
-        this.num1 = num1;
-        this.action = action;
-        this.num2 = num2;
-        this.result = result;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public double getNum1() {

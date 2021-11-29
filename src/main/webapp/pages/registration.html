@@ -23,6 +23,7 @@
     <div>
         <button>Submit</button>
     </div>
+    <p th:if="${session.regMessage} != null" th:text="${session.regMessage}"></p>
 </form>
 </body>
 </html>

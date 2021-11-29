@@ -1,34 +1,45 @@
 package by.tms.entity;
 
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.List;
 
+
+@Entity
 public class User {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private long id;
 
     @NotEmpty
     @NotBlank
+    @Column(name = "login")
     private String login;
 
     @NotEmpty
     @NotBlank
+    @Column(name = "password")
     private String password;
 
-    private List<Operation> operationList = new ArrayList<>();
+
+    public User(long id, String login, String password) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+    }
 
     public User() {
     }
 
-    public User(String login, String password, List<Operation> operationList) {
-        this.login = login;
-        this.password = password;
-        this.operationList = operationList;
+    public long getId() {
+        return id;
     }
 
-    public void saveOperation(Operation operation) {
-        operationList.add(operation);
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -45,13 +56,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Operation> getOperationList() {
-        return operationList;
-    }
-
-    public void setOperationList(List<Operation> operationList) {
-        this.operationList = operationList;
     }
 }

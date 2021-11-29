@@ -13,9 +13,12 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void registerUser(User user) {
+    public boolean registerUser(User user) {
         if (!userDAO.findUserByLogin(user)) {
-            userDAO.addUser(user);
+            userDAO.saveUser(user);
+            return true;
+        } else {
+            return false;
         }
     }
 

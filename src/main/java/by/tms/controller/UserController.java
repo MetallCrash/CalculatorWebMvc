@@ -30,11 +30,15 @@ public class UserController {
     }
 
     @PostMapping("/reg")
-    public String registrationPage(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult) {
+    public String registrationPage(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult, HttpSession session) {
+        session.removeAttribute("regMessage");
         if (bindingResult.hasErrors()) {
             return "/registration";
         } else {
-            userService.registerUser(user);
+            if (!userService.registerUser(user)) {
+                session.setAttribute("regMessage", "This login already in use.");
+                return "/registration";
+            }
             return "redirect:/user/sign-in";
         }
     }

@@ -1,34 +1,50 @@
 package by.tms.dao;
 
 import by.tms.entity.User;
-import org.springframework.stereotype.Component;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 
-@Component
+@Repository
+@Transactional
 public class UserDAO {
-    private final List<User> userList = new ArrayList<>();
 
-    public void addUser(User user) {
-        userList.add(user);
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public void saveUser(User user) {
+        Session session = sessionFactory.openSession();
+        session.save(user);
+        session.close();
     }
 
     public boolean findUserByLogin(User user) {
-        for (User optUser : userList) {
-            if (optUser.getLogin().equals(user.getLogin())) {
-                return true;
-            }
+        try {
+            Session session = sessionFactory.openSession();
+            Query<User> query = session.createQuery("FROM User WHERE login =:login", User.class);
+            query.setParameter("login", user.getLogin());
+            User optUser = query.getSingleResult();
+            return optUser != null;
+        } catch (NoResultException nre) {
+            return false;
         }
-        return false;
     }
 
     public boolean checkUser(User user) {
-        for (User optUser : userList) {
-            if (optUser.getLogin().equals(user.getLogin()) && optUser.getPassword().equals(user.getPassword())) {
-                return true;
-            }
+        try {
+            Session session = sessionFactory.openSession();
+            User optUser = session.createQuery("FROM User WHERE login=:login and password=:password", User.class)
+                    .setParameter("login", user.getLogin())
+                    .setParameter("password", user.getPassword())
+                    .getSingleResult();
+            return optUser != null;
+        } catch (NoResultException nre) {
+            return false;
         }
-        return false;
     }
 }

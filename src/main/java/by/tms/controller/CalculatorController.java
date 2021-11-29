@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/calc")
 public class CalculatorController {
 
+
     private final CalculatorService calculatorService;
 
     public CalculatorController(CalculatorService calculatorService) {
@@ -39,8 +40,8 @@ public class CalculatorController {
             model.addAttribute("result", result);
             User user = (User) session.getAttribute("user");
             if (user != null) {
-                calculatorService.saveOperation(user, operation);
-                model.addAttribute("operationList", calculatorService.showOperationList(user));
+//                calculatorService.saveOperation(operation);
+//                model.addAttribute("operationList", calculatorService.showOperationList(user.getId()));
             }
         }
         return "/calculator";
