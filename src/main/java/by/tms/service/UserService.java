@@ -4,6 +4,8 @@ import by.tms.dao.UserDAO;
 import by.tms.entity.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -22,7 +24,7 @@ public class UserService {
         }
     }
 
-    public boolean checkUser(User user) {
+    public Optional<User> checkUser(User user) {
         return userDAO.checkUser(user);
     }
 }

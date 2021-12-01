@@ -1,14 +1,18 @@
 package by.tms.dao;
 
+import by.tms.entity.Operation;
 import by.tms.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -35,16 +39,39 @@ public class UserDAO {
         }
     }
 
-    public boolean checkUser(User user) {
+    public Optional<User> checkUser(User user) {
         try {
             Session session = sessionFactory.openSession();
             User optUser = session.createQuery("FROM User WHERE login=:login and password=:password", User.class)
                     .setParameter("login", user.getLogin())
                     .setParameter("password", user.getPassword())
                     .getSingleResult();
-            return optUser != null;
+            return Optional.of(optUser);
         } catch (NoResultException nre) {
-            return false;
+            return Optional.empty();
         }
+    }
+
+    public void saveOperation(User user, Operation operation) {
+        Session session = sessionFactory.openSession();
+
+        User userForMerge = session.find(User.class, user.getId());
+        Transaction transaction = session.beginTransaction();
+
+        userForMerge.getOperationList().add(operation);
+
+        session.merge(userForMerge);
+
+        session.flush();
+        transaction.commit();
+
+        session.close();
+    }
+
+    public Optional<List<Operation>> getOperationList(User user) {
+        Session session = sessionFactory.openSession();
+        Optional<List<Operation>> operationList = Optional.of(session.find(User.class, user.getId()).getOperationList());
+        session.close();
+        return operationList;
     }
 }

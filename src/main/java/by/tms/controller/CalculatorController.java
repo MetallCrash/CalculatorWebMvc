@@ -3,6 +3,7 @@ package by.tms.controller;
 import by.tms.entity.Operation;
 import by.tms.entity.User;
 import by.tms.service.CalculatorService;
+import by.tms.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,8 +41,8 @@ public class CalculatorController {
             model.addAttribute("result", result);
             User user = (User) session.getAttribute("user");
             if (user != null) {
-//                calculatorService.saveOperation(operation);
-//                model.addAttribute("operationList", calculatorService.showOperationList(user.getId()));
+                calculatorService.saveOperation(user, operation);
+                model.addAttribute("operationList", calculatorService.showOperationList(user).get());
             }
         }
         return "/calculator";

@@ -54,9 +54,10 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "/sign-in";
         } else {
-            if (userService.checkUser(user)) {
+            User userInDB = userService.checkUser(user).get();
+            if (userService.checkUser(user).isPresent()) {
                 session.removeAttribute("signInMessage");
-                session.setAttribute("user", user);
+                session.setAttribute("user", userInDB);
                 return "redirect:/";
             } else {
                 model.addAttribute("message", "Wrong login or password.");

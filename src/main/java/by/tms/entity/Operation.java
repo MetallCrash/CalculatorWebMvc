@@ -4,9 +4,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @Entity
-public class Operation {
+public class Operation implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -19,6 +20,9 @@ public class Operation {
     private String action;
     private double num2;
     private double result;
+
+    public Operation() {
+    }
 
     public long getId() {
         return id;
