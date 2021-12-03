@@ -43,7 +43,7 @@ public class CalculatorService {
         userDAO.saveOperation(user, operation);
     }
 
-    public Optional<List<Operation>> showOperationList(User user) {
+    public List<Operation> showOperationList(User user) {
         return userDAO.getOperationList(user);
     }
 }

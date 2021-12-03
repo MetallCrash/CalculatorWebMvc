@@ -7,6 +7,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "operations")
 public class Operation implements Serializable {
 
     @Id
@@ -20,6 +21,9 @@ public class Operation implements Serializable {
     private String action;
     private double num2;
     private double result;
+
+    @ManyToOne
+    private User user;
 
     public Operation() {
     }
@@ -62,5 +66,13 @@ public class Operation implements Serializable {
 
     public void setResult(double result) {
         this.result = result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

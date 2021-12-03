@@ -25,7 +25,7 @@ public class User implements Serializable {
     @NotBlank
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Operation> operationList = new ArrayList<>();
 
     public User() {

@@ -28,8 +28,7 @@ public class UserDAO {
     }
 
     public boolean findUserByLogin(User user) {
-        try {
-            Session session = sessionFactory.openSession();
+        try(Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery("FROM User WHERE login =:login", User.class);
             query.setParameter("login", user.getLogin());
             User optUser = query.getSingleResult();
@@ -40,8 +39,7 @@ public class UserDAO {
     }
 
     public Optional<User> checkUser(User user) {
-        try {
-            Session session = sessionFactory.openSession();
+        try(Session session = sessionFactory.openSession()) {
             User optUser = session.createQuery("FROM User WHERE login=:login and password=:password", User.class)
                     .setParameter("login", user.getLogin())
                     .setParameter("password", user.getPassword())
@@ -58,6 +56,7 @@ public class UserDAO {
         User userForMerge = session.find(User.class, user.getId());
         Transaction transaction = session.beginTransaction();
 
+        operation.setUser(userForMerge);
         userForMerge.getOperationList().add(operation);
 
         session.merge(userForMerge);
@@ -68,9 +67,10 @@ public class UserDAO {
         session.close();
     }
 
-    public Optional<List<Operation>> getOperationList(User user) {
+    public List<Operation> getOperationList(User user) {
         Session session = sessionFactory.openSession();
-        Optional<List<Operation>> operationList = Optional.of(session.find(User.class, user.getId()).getOperationList());
+        List<Operation> operationList = session.createQuery("from Operation where user= :user")
+                .setParameter("user", user).getResultList();
         session.close();
         return operationList;
     }

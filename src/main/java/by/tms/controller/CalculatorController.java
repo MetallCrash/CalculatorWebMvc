@@ -27,8 +27,10 @@ public class CalculatorController {
     }
 
     @GetMapping()
-    public String calculate(Model model) {
+    public String calculate(Model model, HttpSession session) {
         model.addAttribute("newOperation", new Operation());
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("operationList", calculatorService.showOperationList(user));
         return "/calculator";
     }
 
@@ -42,7 +44,7 @@ public class CalculatorController {
             User user = (User) session.getAttribute("user");
             if (user != null) {
                 calculatorService.saveOperation(user, operation);
-                model.addAttribute("operationList", calculatorService.showOperationList(user).get());
+                model.addAttribute("operationList", calculatorService.showOperationList(user));
             }
         }
         return "/calculator";
